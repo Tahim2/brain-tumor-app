@@ -3,7 +3,7 @@ import tensorflow as tf
 from PIL import Image
 import numpy as np
 import keras
-model = keras.models.load_model("model.h5")
+model = keras.models.load_model("brain_tumor_classifier_saved_model")
 
 
 
