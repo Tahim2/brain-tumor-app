@@ -3,7 +3,7 @@ import tensorflow as tf
 from PIL import Image
 import numpy as np
 import keras
-model = keras.models.load_model("brain_tumor_classifier_saved_model")
+model = tf.keras.models.load_model("brain_tumor_classifier_saved_model/")
 
 
 
