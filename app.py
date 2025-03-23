@@ -40,12 +40,17 @@ st.markdown("<div class='header'>Brain Tumor Detection: Upload Your MRI Scan</di
 # Upload image file with customized text
 uploaded_file = st.file_uploader("Please upload your MRI scan (jpg, png, jpeg)", type=["jpg", "png", "jpeg"])
 
-# Placeholder for clearing previous output when starting a new prediction
-prediction_placeholder = st.empty()
+# Reset state if button is clicked
+if "prediction" in st.session_state and st.session_state["prediction"] is not None and st.button("Start New Prediction"):
+    st.session_state["prediction"] = None
+    st.session_state["uploaded_file"] = None
 
-if uploaded_file is not None:
+# If the user uploaded a file, process the image
+if uploaded_file is not None or "uploaded_file" in st.session_state:
+    st.session_state["uploaded_file"] = uploaded_file
+    
     # Open and display the uploaded image
-    img = image.load_img(uploaded_file, target_size=(IMG_SIZE, IMG_SIZE), color_mode='grayscale')
+    img = image.load_img(st.session_state["uploaded_file"], target_size=(IMG_SIZE, IMG_SIZE), color_mode='grayscale')
     st.image(img, caption="Uploaded MRI Scan", use_column_width=True)
 
     # Preprocess the image for prediction
@@ -55,7 +60,7 @@ if uploaded_file is not None:
     # Make prediction
     prediction = model.predict(img_array)
 
-    # Classify prediction with confidence score
+    # Store prediction in session_state
     if prediction[0] > 0.5:
         prediction_class = "Tumor"
         message = "⚠️ Warning: The model has detected a tumor in the MRI scan. Please consult a healthcare professional for further evaluation."
@@ -65,13 +70,14 @@ if uploaded_file is not None:
         message = "😊 Good news: No tumor detected in the MRI scan. However, please continue with regular checkups to stay healthy."
         confidence = f"Confidence: {(1 - prediction[0][0]) * 100:.2f}%"
 
-    # Display results with styling
-    st.markdown(f"<div class='prediction'>Prediction: **{prediction_class}**</div>", unsafe_allow_html=True)
-    st.markdown(f"<div class='message'>{message}</div>", unsafe_allow_html=True)
-    st.markdown(f"<div class='message'>{confidence}</div>", unsafe_allow_html=True)
+    # Store the prediction in session_state
+    st.session_state["prediction"] = (prediction_class, message, confidence)
 
-    # Add a button to start a new prediction
-    if st.button("Start New Prediction"):
-        # Reset the state and clear the prediction
-        prediction_placeholder.empty()
-        st.experimental_rerun()  # You can still use rerun for this functionality
+    # Display results with styling
+    st.markdown(f"<div class='prediction'>Prediction: **{st.session_state['prediction'][0]}**</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='message'>{st.session_state['prediction'][1]}</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='message'>{st.session_state['prediction'][2]}</div>", unsafe_allow_html=True)
+
+# Add a button to start a new prediction
+if "prediction" in st.session_state and st.session_state["prediction"] is not None:
+    st.button("Start New Prediction")
