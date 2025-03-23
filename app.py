@@ -40,8 +40,8 @@ st.markdown("<div class='header'>Brain Tumor Detection: Upload Your MRI Scan</di
 # Upload image file with customized text
 uploaded_file = st.file_uploader("Please upload your MRI scan (jpg, png, jpeg)", type=["jpg", "png", "jpeg"])
 
-# Reset state if button is clicked
-if "prediction" in st.session_state and st.session_state["prediction"] is not None and st.button("Start New Prediction"):
+# Reset session state on button click
+if st.button("Start New Prediction", key="new_prediction"):
     st.session_state["prediction"] = None
     st.session_state["uploaded_file"] = None
 
@@ -78,6 +78,3 @@ if uploaded_file is not None or "uploaded_file" in st.session_state:
     st.markdown(f"<div class='message'>{st.session_state['prediction'][1]}</div>", unsafe_allow_html=True)
     st.markdown(f"<div class='message'>{st.session_state['prediction'][2]}</div>", unsafe_allow_html=True)
 
-# Add a button to start a new prediction
-if "prediction" in st.session_state and st.session_state["prediction"] is not None:
-    st.button("Start New Prediction")
