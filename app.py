@@ -63,7 +63,12 @@ if uploaded_file is not None or "uploaded_file" in st.session_state:
     # Store prediction in session_state
     if prediction[0] > 0.5:
         prediction_class = "Tumor"
-        message = "⚠️ Warning: The model has detected a tumor in the MRI scan. Please consult a healthcare professional for further evaluation."
+        message = (
+            "⚠️ **Warning**: The model has detected a potential tumor in the MRI scan. "
+            "It is crucial that you consult a healthcare professional immediately for further evaluation. "
+            "This could be life-threatening, and timely medical intervention is essential. "
+            "We recommend visiting an oncologist or a neurologist as soon as possible for a comprehensive diagnosis and treatment plan."
+        )
         confidence = f"Confidence: {prediction[0][0] * 100:.2f}%"
     else:
         prediction_class = "No Tumor"
