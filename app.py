@@ -69,6 +69,7 @@ if uploaded_file is not None or "uploaded_file" in st.session_state:
             "We strongly recommend seeing an **oncologist** or **neurologist** as soon as possible for a full evaluation and **treatment**."
         )
         confidence = f"Confidence: {prediction[0][0] * 100:.2f}%"
+        
     else:
         prediction_class = "No Tumor"
         message = "😊 Good news: No tumor detected in the MRI scan. However, please continue with regular checkups to stay healthy."
@@ -77,7 +78,7 @@ if uploaded_file is not None or "uploaded_file" in st.session_state:
     # Store the prediction in session_state
     st.session_state["prediction"] = (prediction_class, message, confidence)
 
-    # Display results with styling
-    st.markdown(f"<div class='prediction'>Prediction: **{st.session_state['prediction'][0]}**</div>", unsafe_allow_html=True)
-    st.markdown(f"<div class='message'>{st.session_state['prediction'][1]}</div>", unsafe_allow_html=True)
-    st.markdown(f"<div class='message'>{st.session_state['prediction'][2]}</div>", unsafe_allow_html=True)
+    # Display results with proper markdown rendering
+    st.markdown(f"### Prediction: **{st.session_state['prediction'][0]}**")
+    st.markdown(f"#### {st.session_state['prediction'][1]}")
+    st.markdown(f"**{st.session_state['prediction'][2]}**")
