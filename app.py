@@ -40,6 +40,9 @@ st.markdown("<div class='header'>Brain Tumor Detection: Upload Your MRI Scan</di
 # Upload image file with customized text
 uploaded_file = st.file_uploader("Please upload your MRI scan (jpg, png, jpeg)", type=["jpg", "png", "jpeg"])
 
+# Placeholder for clearing previous output when starting a new prediction
+prediction_placeholder = st.empty()
+
 if uploaded_file is not None:
     # Open and display the uploaded image
     img = image.load_img(uploaded_file, target_size=(IMG_SIZE, IMG_SIZE), color_mode='grayscale')
@@ -67,6 +70,8 @@ if uploaded_file is not None:
     st.markdown(f"<div class='message'>{message}</div>", unsafe_allow_html=True)
     st.markdown(f"<div class='message'>{confidence}</div>", unsafe_allow_html=True)
 
-    # Optional: Add a CTA button
+    # Add a button to start a new prediction
     if st.button("Start New Prediction"):
-        st.experimental_rerun()
+        # Reset the state and clear the prediction
+        prediction_placeholder.empty()
+        st.experimental_rerun()  # You can still use rerun for this functionality
